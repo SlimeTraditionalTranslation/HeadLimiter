@@ -29,7 +29,7 @@ public final class HeadsLimiter extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    private final boolean isCargo(SlimefunItem sfItem) {
+    private boolean isCargo(SlimefunItem sfItem) {
         return sfItem.isItem(SlimefunItems.CARGO_MANAGER)
             || sfItem.isItem(SlimefunItems.CARGO_CONNECTOR_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_INPUT_NODE)
