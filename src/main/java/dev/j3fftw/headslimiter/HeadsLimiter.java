@@ -54,9 +54,7 @@ public final class HeadsLimiter extends JavaPlugin implements Listener {
 
             final int threshold = this.getConfig().getInt("amount");
             if (i >= threshold) {
-                block.setType(Material.AIR);
-                block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
-                BlockStorage.clearBlockInfo(block.getLocation());
+                e.setCancelled(true);
                 e.getPlayer().sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
             }
         }
