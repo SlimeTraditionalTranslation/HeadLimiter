@@ -1,4 +1,4 @@
-package dev.j3fftw.headslimiter;
+package dev.j3fftw.headlimiter;
 
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.io.File;
@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class HeadsLimiter extends JavaPlugin implements Listener {
+public final class HeadLimiter extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {

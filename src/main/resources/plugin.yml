@@ -1,4 +1,4 @@
-name: HeadsLimiter
+name: HeadLimiter
 version: ${project.version}
 main: dev.j3fftw.headslimiter.HeadsLimiter
 depend: [Slimefun]
