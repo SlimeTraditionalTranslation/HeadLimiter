@@ -18,7 +18,6 @@ public final class HeadsLimiter extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
         if (!new File(getDataFolder(), "config.yml").exists())
             saveDefaultConfig();
 
@@ -30,7 +29,7 @@ public final class HeadsLimiter extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
-    public static boolean isCargo(SlimefunItem sfItem) {
+    private final boolean isCargo(SlimefunItem sfItem) {
         return sfItem.isItem(SlimefunItems.CARGO_MANAGER)
             || sfItem.isItem(SlimefunItems.CARGO_CONNECTOR_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_INPUT_NODE)
@@ -49,18 +48,16 @@ public final class HeadsLimiter extends JavaPlugin implements Listener {
             final Block block = e.getBlock();
             for (BlockState bs : block.getChunk().getTileEntities()) {
                 final SlimefunItem slimefunItem = BlockStorage.check(bs.getLocation());
-                if (slimefunItem != null && (isCargo(slimefunItem)))
+                if (slimefunItem != null && isCargo(slimefunItem))
                     i++;
             }
 
-            int threshold = this.getConfig().getInt("amount");
+            final int threshold = this.getConfig().getInt("amount");
             if (i >= threshold) {
-                Bukkit.getScheduler().runTask(this, () -> block.getWorld().dropItemNaturally(block.getLocation(),
-                    sfItem.getItem())
-                );
+                block.setType(Material.AIR);
+                block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
                 BlockStorage.clearBlockInfo(block.getLocation());
-                Bukkit.getScheduler().runTask(this, () -> block.setType(Material.AIR));
-                e.getPlayer().sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes");
+                e.getPlayer().sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
             }
         }
     }
