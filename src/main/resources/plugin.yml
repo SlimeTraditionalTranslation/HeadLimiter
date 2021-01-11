@@ -1,5 +1,5 @@
 name: HeadLimiter
 version: ${project.version}
-main: dev.j3fftw.headslimiter.HeadsLimiter
+main: dev.j3fftw.headlimiter.HeadLimiter
 depend: [Slimefun]
 api-version: 1.16
