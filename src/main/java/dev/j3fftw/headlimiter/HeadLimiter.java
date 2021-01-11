@@ -4,6 +4,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.io.File;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +23,8 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(this, this);
+
+        new Metrics(this, 9968);
     }
 
     private boolean isCargo(SlimefunItem sfItem) {
