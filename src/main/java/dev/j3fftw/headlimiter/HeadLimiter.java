@@ -2,6 +2,8 @@ package dev.j3fftw.headlimiter;
 
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
@@ -17,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
+
 
     @Override
     public void onEnable() {
@@ -40,6 +43,10 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             || sfItem.isItem(SlimefunItems.CARGO_MANAGER);
     }
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(
+        this.getConfig().getInt("thread-pool-size")
+    );
+
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         final SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
@@ -48,7 +55,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         ) {
             final Block block = e.getBlock();
             final BlockState[] te = block.getChunk().getTileEntities();
-            new Thread(() -> {
+            executorService.submit(() -> {
                 int i = 0;
                 for (BlockState bs : te) {
                     final SlimefunItem slimefunItem = BlockStorage.check(bs.getLocation());
@@ -65,7 +72,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                     BlockStorage.clearBlockInfo(block.getLocation());
                     e.getPlayer().sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
                 }
-            }).start();
+            });
         }
     }
 }
