@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
-    ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("HeadLimiter-thread").build();
+    private final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("HeadLimiter-pool-%d").build();
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(
         this.getConfig().getInt("thread-pool-size", 4), threadFactory
