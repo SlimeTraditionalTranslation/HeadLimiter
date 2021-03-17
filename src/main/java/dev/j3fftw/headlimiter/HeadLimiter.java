@@ -1,9 +1,11 @@
 package dev.j3fftw.headlimiter;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
@@ -21,8 +23,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
+    ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("HeadLimiter-thread").build();
+
     private final ExecutorService executorService = Executors.newFixedThreadPool(
-        this.getConfig().getInt("thread-pool-size", 4)
+        this.getConfig().getInt("thread-pool-size", 4), threadFactory
     );
 
     @Override
