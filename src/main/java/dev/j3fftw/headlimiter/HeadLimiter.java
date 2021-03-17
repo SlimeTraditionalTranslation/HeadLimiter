@@ -20,6 +20,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(
+        this.getConfig().getInt("thread-pool-size", 4)
+    );
 
     @Override
     public void onEnable() {
@@ -42,11 +45,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             || sfItem.isItem(SlimefunItems.CARGO_CONNECTOR_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_MANAGER);
     }
-
-    private final ExecutorService executorService = Executors.newFixedThreadPool(
-        this.getConfig().getInt("thread-pool-size")
-    );
-
+    
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         final SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
