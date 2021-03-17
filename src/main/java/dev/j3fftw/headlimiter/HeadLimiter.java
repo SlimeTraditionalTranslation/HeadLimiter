@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,11 +46,12 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             || sfItem.isItem(SlimefunItems.CARGO_CONNECTOR_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_MANAGER);
     }
-    
-    @EventHandler
+
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent e) {
         final SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
-        if ((e.getBlock().getType() == Material.PLAYER_HEAD || e.getBlock().getType() == Material.PLAYER_WALL_HEAD)
+        if (!e.isCancelled()
+            && (e.getBlock().getType() == Material.PLAYER_HEAD || e.getBlock().getType() == Material.PLAYER_WALL_HEAD)
             && sfItem != null && isCargo(sfItem)
         ) {
             final Block block = e.getBlock();
@@ -65,8 +67,10 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                 final int threshold = this.getConfig().getInt("amount");
                 if (i >= threshold) {
                     Bukkit.getScheduler().runTask(this, () -> {
-                        block.setType(Material.AIR);
-                        block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
+                        if (block.getType() != Material.AIR) {
+                            block.setType(Material.AIR);
+                            block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
+                        }
                     });
                     BlockStorage.clearBlockInfo(block.getLocation());
                     e.getPlayer().sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
