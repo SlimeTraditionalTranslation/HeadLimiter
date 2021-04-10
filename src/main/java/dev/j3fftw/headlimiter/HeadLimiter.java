@@ -12,6 +12,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -73,7 +74,9 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                     Bukkit.getScheduler().runTask(this, () -> {
                         if (block.getType() != Material.AIR) {
                             block.setType(Material.AIR);
-                            block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
+                            if (!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+                                block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
+                            }
                         }
                     });
                     BlockStorage.clearBlockInfo(block.getLocation());
