@@ -4,7 +4,7 @@
 此插件將會限制玩家在區塊中放置默認的25個物流
 
 > 此為**非官方**版本, 請勿在該作者問題追蹤內回報! <br>
-> [原作連結]() | [非官方Discord](https://discord.gg/GF4CwjFXT9)
+> [原作連結](https://github.com/J3fftw1/HeadLimiter) | [非官方Discord](https://discord.gg/GF4CwjFXT9)
 
 #### 下載訊息
 
