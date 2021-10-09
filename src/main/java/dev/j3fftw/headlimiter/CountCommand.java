@@ -46,7 +46,7 @@ public class CountCommand implements CommandExecutor {
                 }
                 StringBuilder message = new StringBuilder()
                         .append(ChatColor.GOLD)
-                        .append("目前數量": ")
+                        .append("目前數量: ")
                         .append(total)
                         .append("/")
                         .append(INSTANCE.getConfig().getInt("amount"))
