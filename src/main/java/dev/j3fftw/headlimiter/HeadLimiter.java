@@ -26,18 +26,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
+    private static HeadLimiter instance;
+
     private final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("HeadLimiter-pool-%d").build();
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(
+    public final ExecutorService executorService = Executors.newFixedThreadPool(
         this.getConfig().getInt("thread-pool-size", 4), threadFactory
     );
 
     @Override
     public void onEnable() {
+        instance = this;
         if (!new File(getDataFolder(), "config.yml").exists())
             saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(this, this);
+
+        getCommand("headlimiter").setExecutor(new CountCommand());
 
         new Metrics(this, 9968);
 
@@ -46,7 +51,12 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         }
     }
 
-    private boolean isCargo(SlimefunItem sfItem) {
+    @Override
+    public void onDisable() {
+        instance = null;
+    }
+
+    public boolean isCargo(SlimefunItem sfItem) {
         return sfItem.isItem(SlimefunItems.CARGO_INPUT_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_OUTPUT_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_OUTPUT_NODE_2)
@@ -86,5 +96,9 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                 }
             });
         }
+    }
+
+    public static HeadLimiter getInstance() {
+        return instance;
     }
 }
