@@ -6,6 +6,5 @@ api-version: 1.16
 
 commands:
   headlimiter:
-    description: basic HeadLimiter command
+    description: Basic HeadLimiter command
     aliases: hl
-    usage: /headlimiter <subcommand>

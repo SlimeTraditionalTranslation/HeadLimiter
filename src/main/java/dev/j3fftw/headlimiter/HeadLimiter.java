@@ -35,11 +35,6 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
     );
 
     @Override
-    public void onDisable() {
-        instance = null;
-    }
-
-    @Override
     public void onEnable() {
         instance = this;
         if (!new File(getDataFolder(), "config.yml").exists())
@@ -54,6 +49,11 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         if (getConfig().getBoolean("auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
         }
+    }
+
+    @Override
+    public void onDisable() {
+        instance = null;
     }
 
     public boolean isCargo(SlimefunItem sfItem) {

@@ -13,7 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class CountCommand implements CommandExecutor {
 
-    private static final HeadLimiter INSTANCE = HeadLimiter.getInstance();
+    private final HeadLimiter INSTANCE = HeadLimiter.getInstance();
 
     private static final String[] IDS_TO_COUNT = {
             "CARGO_NODE_INPUT",
@@ -27,13 +27,13 @@ public class CountCommand implements CommandExecutor {
     @ParametersAreNonnullByDefault
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (args.length == 1 && sender instanceof Player) {
-            Player p = ((Player) sender);
-            final BlockState[] te = p.getChunk().getTileEntities();
+            Player p = (Player) sender;
+            final BlockState[] tileEntities = p.getChunk().getTileEntities();
             INSTANCE.executorService.submit(() -> {
                 int[] counts = new int[IDS_TO_COUNT.length];
                 int total = 0;
-                for (BlockState bs : te) {
-                    final SlimefunItem slimefunItem = BlockStorage.check(bs.getLocation());
+                for (BlockState state : tileEntities) {
+                    final SlimefunItem slimefunItem = BlockStorage.check(state.getLocation());
                     if (slimefunItem != null) {
                         for (int i = 0; i < IDS_TO_COUNT.length; i++) {
                             if (slimefunItem.getId().equals(IDS_TO_COUNT[i])) {
@@ -44,15 +44,20 @@ public class CountCommand implements CommandExecutor {
                         }
                     }
                 }
-                StringBuilder message = new StringBuilder("Current count: ")
+                StringBuilder message = new StringBuilder()
+                        .append(ChatColor.GOLD)
+                        .append("Current count: ")
                         .append(total)
                         .append("/")
                         .append(INSTANCE.getConfig().getInt("amount"))
                         .append('\n');
                 for (int i = 0; i < IDS_TO_COUNT.length; i++) {
                     if (counts[i] > 0) {
-                        message.append(IDS_TO_COUNT[i])
+                        message.append("  ")
+                                .append(ChatColor.GRAY)
+                                .append(IDS_TO_COUNT[i])
                                 .append(": ")
+                                .append(ChatColor.YELLOW)
                                 .append(counts[i])
                                 .append('\n');
                     }
@@ -60,8 +65,8 @@ public class CountCommand implements CommandExecutor {
                 p.sendMessage(message.toString());
             });
         } else {
-            sender.sendMessage(
-                    ChatColor.GOLD + "/hl count" + ChatColor.GRAY + " Counts how many heads are in this chunk"
+            sender.sendMessage(ChatColor.GOLD + "/hl count"
+                    + ChatColor.GRAY + " - Counts how many heads are in this chunk"
             );
         }
 
