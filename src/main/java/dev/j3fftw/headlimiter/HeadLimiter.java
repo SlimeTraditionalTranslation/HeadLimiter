@@ -82,11 +82,11 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                 }
 
                 final int threshold = this.getConfig().getInt("amount");
-                if (i >= threshold) {
+                if (i > threshold) {
                     Bukkit.getScheduler().runTask(this, () -> {
                         if (block.getType() != Material.AIR) {
                             block.setType(Material.AIR);
-                            if (!e.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+                            if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                                 block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
                             }
                         }
