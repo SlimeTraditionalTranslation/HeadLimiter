@@ -4,3 +4,8 @@ main: dev.j3fftw.headlimiter.HeadLimiter
 description: 黏液科技附加 頭顱限制器 繁體翻譯版.
 depend: [Slimefun]
 api-version: 1.16
+
+commands:
+  headlimiter:
+    description: Basic HeadLimiter command
+    aliases: hl
