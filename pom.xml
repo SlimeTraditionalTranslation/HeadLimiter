@@ -69,7 +69,7 @@
                             <shadedPattern>dev.j3fftw.headlimiter.bstats</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>com.github.Slimefun-Addon-Community.ExtraUtils</pattern>
+                            <pattern>dev.j3fftw.extrautils</pattern>
                             <shadedPattern>dev.j3fftw.headlimiter.extrautils</shadedPattern>
                         </relocation>
                     </relocations>
