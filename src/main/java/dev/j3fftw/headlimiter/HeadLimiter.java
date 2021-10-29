@@ -1,16 +1,10 @@
 package dev.j3fftw.headlimiter;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 //import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
-
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
 //import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +17,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
@@ -46,7 +45,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
         //new Metrics(this, 9968);
 
-        /*if (getConfig().getBoolean("auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
+        /*if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
         }*/
     }
@@ -62,6 +61,21 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             || sfItem.isItem(SlimefunItems.CARGO_OUTPUT_NODE_2)
             || sfItem.isItem(SlimefunItems.CARGO_CONNECTOR_NODE)
             || sfItem.isItem(SlimefunItems.CARGO_MANAGER);
+    }
+
+    public void onCheck(int amount, Block block, BlockPlaceEvent e, int i, SlimefunItem sfItem) {
+        if (i > amount) {
+            Bukkit.getScheduler().runTask(this, () -> {
+                if (block.getType() != Material.AIR) {
+                    block.setType(Material.AIR);
+                    if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                        block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
+                    }
+                }
+            });
+            BlockStorage.clearBlockInfo(block.getLocation());
+            e.getPlayer().sendMessage(ChatColor.RED + "你已達到此區塊的最高物流放置數量");
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -80,19 +94,15 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                     if (slimefunItem != null && isCargo(slimefunItem))
                         i++;
                 }
-
-                final int threshold = this.getConfig().getInt("amount");
-                if (i > threshold) {
-                    Bukkit.getScheduler().runTask(this, () -> {
-                        if (block.getType() != Material.AIR) {
-                            block.setType(Material.AIR);
-                            if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-                                block.getWorld().dropItemNaturally(block.getLocation(), sfItem.getItem());
-                            }
+                if (this.getConfig().getBoolean("permissions", false)) {
+                    for (String perm : this.getConfig().getConfigurationSection("permission").getKeys(false)) {
+                        if (e.getPlayer().hasPermission("headlimiter.permission." + perm)) {
+                            onCheck(this.getConfig().getInt("permission." + perm), block, e, i, sfItem);
+                            break;
                         }
-                    });
-                    BlockStorage.clearBlockInfo(block.getLocation());
-                    e.getPlayer().sendMessage(ChatColor.RED + "你已達到此區塊的最高物流放置數量");
+                    }
+                } else {
+                    onCheck(this.getConfig().getInt("amount"), block, e, i, sfItem);
                 }
             });
         }
