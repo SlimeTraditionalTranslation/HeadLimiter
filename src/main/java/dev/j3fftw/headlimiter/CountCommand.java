@@ -16,16 +16,23 @@ public class CountCommand implements CommandExecutor {
     @ParametersAreNonnullByDefault
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (args.length == 1 && sender instanceof Player) {
-            Player p = (Player) sender;
+            Player player = (Player) sender;
 
-            Utils.count(p.getChunk(), result -> {
+            Utils.count(player.getChunk(), result -> {
                 StringBuilder message = new StringBuilder()
                     .append(ChatColor.GOLD)
                     .append("Current count: ")
                     .append(result.getTotal())
                     .append("/")
-                    .append(Utils.getMaxHeads(p))
+                    .append(Utils.getMaxHeads(player))
                     .append('\n');
+
+                if (Utils.canBypass(player)) {
+                    message.append("  ")
+                        .append(ChatColor.GOLD)
+                        .append("You can bypass the limits")
+                        .append('\n');
+                }
 
                 for (Map.Entry<String, Integer> entry : result.getCounts().entrySet()) {
                     if (entry.getValue() > 0) {
@@ -38,7 +45,7 @@ public class CountCommand implements CommandExecutor {
                             .append('\n');
                     }
                 }
-                p.sendMessage(message.toString());
+                player.sendMessage(message.toString());
             });
         } else {
             sender.sendMessage(ChatColor.GOLD + "/hl count"

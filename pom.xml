@@ -65,7 +65,7 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats.bukkit</pattern>
+                            <pattern>org.bstats</pattern>
                             <shadedPattern>dev.j3fftw.headlimiter.bstats</shadedPattern>
                         </relocation>
                         <relocation>
