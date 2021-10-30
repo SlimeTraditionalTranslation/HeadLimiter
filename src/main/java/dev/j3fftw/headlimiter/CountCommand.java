@@ -1,7 +1,6 @@
 package dev.j3fftw.headlimiter;
 
 import org.bukkit.ChatColor;
-import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,20 +18,20 @@ public class CountCommand implements CommandExecutor {
             Player player = (Player) sender;
 
             Utils.count(player.getChunk(), result -> {
-                StringBuilder message = new StringBuilder()
-                    .append(ChatColor.GOLD)
+                StringBuilder message = new StringBuilder();
+
+                if (Utils.canBypass(player)) {
+                    message.append(result.getTotal() >= Utils.getMaxHeads(player) ? ChatColor.RED : ChatColor.GREEN)
+                        .append("You can bypass the limits")
+                        .append('\n');
+                }
+
+                message.append(ChatColor.GOLD)
                     .append("Current count: ")
                     .append(result.getTotal())
                     .append("/")
                     .append(Utils.getMaxHeads(player))
                     .append('\n');
-
-                if (Utils.canBypass(player)) {
-                    message.append("  ")
-                        .append(ChatColor.GOLD)
-                        .append("You can bypass the limits")
-                        .append('\n');
-                }
 
                 for (Map.Entry<String, Integer> entry : result.getCounts().entrySet()) {
                     if (entry.getValue() > 0) {
