@@ -37,17 +37,18 @@ public final class Utils {
     private Utils() {}
 
     protected static void loadPermissions() {
-        final ConfigurationSection sec = HeadLimiter.getInstance().getConfig().getConfigurationSection("permission");
-        if (sec != null) {
-            permissionNodes.addAll(sec.getKeys(false));
+        final ConfigurationSection permissionSection = HeadLimiter.getInstance().getConfig()
+            .getConfigurationSection("permission");
+        if (permissionSection != null) {
+            permissionNodes.addAll(permissionSection.getKeys(false));
         }
     }
 
     public static int getMaxHeads(@Nonnull Player player) {
         if (permissionsEnabled() && !permissionNodes.isEmpty()) {
-            for (String node : permissionNodes) {
-                if (player.hasPermission(PERMISSION_PREFIX + node)) {
-                    return HeadLimiter.getInstance().getConfig().getInt("permission." + node);
+            for (String permissionNode : permissionNodes) {
+                if (player.hasPermission(PERMISSION_PREFIX + permissionNode)) {
+                    return HeadLimiter.getInstance().getConfig().getInt("permission." + permissionNode);
                 }
             }
         }
