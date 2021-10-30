@@ -3,11 +3,7 @@ package dev.j3fftw.headlimiter;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -17,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
@@ -58,16 +53,21 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlace(BlockPlaceEvent e) {
-        final SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
         final Player player = e.getPlayer();
         final Block block = e.getBlock();
 
         if (!e.isCancelled()
             && (block.getType() == Material.PLAYER_HEAD || block.getType() == Material.PLAYER_WALL_HEAD)
-            && sfItem != null && isCargo(sfItem)
+            && !Utils.canBypass(player)
         ) {
-            final int maxAmount = Utils.getMaxHeads(player);
-            Utils.count(block.getChunk(), result -> Utils.onCheck(player, block, maxAmount, result.getTotal(), sfItem));
+            final SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
+            if (sfItem != null
+                && isCargo(sfItem)
+            ) {
+                final int maxAmount = Utils.getMaxHeads(player);
+                Utils.count(block.getChunk(),
+                    result -> Utils.onCheck(player, block, maxAmount, result.getTotal(), sfItem));
+            }
         }
     }
 

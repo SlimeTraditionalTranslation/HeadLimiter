@@ -33,6 +33,7 @@ public final class Utils {
 
     private static final Set<String> permissionNodes = new LinkedHashSet<>();
     private static final String PERMISSION_PREFIX = "headlimiter.permission.";
+    private static final String BYPASS_PERMISSION = "headlimiter.bypass";
 
     private Utils() {}
 
@@ -57,6 +58,10 @@ public final class Utils {
 
     public static boolean permissionsEnabled() {
         return HeadLimiter.getInstance().getConfig().getBoolean("permissions", false);
+    }
+
+    public static boolean canBypass(@Nonnull Player player) {
+        return player.hasPermission(BYPASS_PERMISSION);
     }
 
     public static int getDefaultMax() {
