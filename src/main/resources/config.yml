@@ -1,4 +1,4 @@
-## Amount of Cargo machines per chunk (25 by default
+## Amount of Cargo machines per chunk (25 by default)
 amount: 25
 
 ## Auto updater (true by default)
