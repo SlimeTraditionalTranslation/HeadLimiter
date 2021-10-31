@@ -76,7 +76,8 @@ public final class Utils {
             int total = 0;
             for (BlockState state : tileEntities) {
                 final SlimefunItem slimefunItem = BlockStorage.check(state.getLocation());
-                if (slimefunItem != null) {
+                //TODO remove is cargo check
+                if (slimefunItem != null && HeadLimiter.getInstance().isCargo(slimefunItem)) {
                     counts.merge(slimefunItem.getId(), 1, Integer::sum);
                     total++;
                 }
