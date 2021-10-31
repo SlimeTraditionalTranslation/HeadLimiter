@@ -3,7 +3,6 @@ package dev.j3fftw.headlimiter;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -31,7 +30,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
         getCommand("headlimiter").setExecutor(new CountCommand());
 
-        new Metrics(this, 9978);
+        new MetricsService(this).start();
 
         if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
