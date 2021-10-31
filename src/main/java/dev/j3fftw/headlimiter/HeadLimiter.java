@@ -31,7 +31,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
         getCommand("headlimiter").setExecutor(new CountCommand());
 
-        new Metrics(this, 9968);
+        new Metrics(this, 9978);
 
         if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
