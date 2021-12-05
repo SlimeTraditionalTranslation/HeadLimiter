@@ -1,6 +1,5 @@
 package dev.j3fftw.headlimiter;
 
-import com.palmergames.bukkit.towny.TownyAPI;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
