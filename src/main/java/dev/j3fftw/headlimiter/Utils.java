@@ -1,6 +1,7 @@
 package dev.j3fftw.headlimiter;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.palmergames.bukkit.towny.TownyAPI;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Bukkit;
@@ -23,6 +24,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
+
+import static com.palmergames.bukkit.towny.TownySettings.getConfig;
 
 public final class Utils {
 
@@ -89,7 +92,10 @@ public final class Utils {
 
     @ParametersAreNonnullByDefault
     public static void onCheck(Player player, Block block, int maxAmount, int count, SlimefunItem sfItem) {
-        if (count > maxAmount) {
+        boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
+                && getConfig().getBoolean("block-towny-wilderness-cargo", false)
+                && TownyAPI.getInstance().isWilderness(block);
+        if (count > maxAmount || isTownyWilderness) {
             Bukkit.getScheduler().runTask(HeadLimiter.getInstance(), () -> {
                 if (block.getType() != Material.AIR) {
                     block.setType(Material.AIR);
@@ -100,7 +106,11 @@ public final class Utils {
             });
 
             BlockStorage.clearBlockInfo(block.getLocation());
-            player.sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
+            if (isTownyWilderness) {
+                player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in the wilderness");
+            } else {
+                player.sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
+            }
         }
     }
 }
