@@ -1,7 +1,5 @@
 package dev.j3fftw.headlimiter;
 
-import com.palmergames.bukkit.towny.TownyAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Arrays;
 import java.util.Map;
 
 public class CountCommand implements CommandExecutor {
