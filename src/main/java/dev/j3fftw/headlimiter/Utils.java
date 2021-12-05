@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 
-import static com.palmergames.bukkit.towny.TownySettings.getConfig;
-
 public final class Utils {
 
     private static final ExecutorService SERVICE = Executors.newFixedThreadPool(
@@ -93,7 +91,7 @@ public final class Utils {
     @ParametersAreNonnullByDefault
     public static void onCheck(Player player, Block block, int maxAmount, int count, SlimefunItem sfItem) {
         boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
-                && getConfig().getBoolean("block-towny-wilderness-cargo", false)
+                && HeadLimiter.getInstance().getConfig().getBoolean("block-towny-wilderness-cargo", false)
                 && TownyAPI.getInstance().isWilderness(block);
         if (count > maxAmount || isTownyWilderness) {
             Bukkit.getScheduler().runTask(HeadLimiter.getInstance(), () -> {
