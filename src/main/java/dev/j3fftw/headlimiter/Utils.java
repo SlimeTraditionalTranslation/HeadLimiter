@@ -90,10 +90,8 @@ public final class Utils {
 
     @ParametersAreNonnullByDefault
     public static void onCheck(Player player, Block block, int maxAmount, int count, SlimefunItem sfItem) {
-        boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
-                && HeadLimiter.getInstance().getConfig().getBoolean("block-towny-wilderness-cargo", false)
-                && TownyAPI.getInstance().isWilderness(block);
-        if (count > maxAmount || isTownyWilderness) {
+        boolean isPlacingRestricted = isPlacingRestricted(block);
+        if (count > maxAmount || isPlacingRestricted) {
             Bukkit.getScheduler().runTask(HeadLimiter.getInstance(), () -> {
                 if (block.getType() != Material.AIR) {
                     block.setType(Material.AIR);
@@ -104,11 +102,24 @@ public final class Utils {
             });
 
             BlockStorage.clearBlockInfo(block.getLocation());
-            if (isTownyWilderness) {
+            if (isPlacingRestricted) {
                 player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in the wilderness");
             } else {
                 player.sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
             }
         }
+    }
+
+    /**
+     * Whether the block placement is prohibited or not by protection plugins
+     * @param block The block to be checked
+     * @return Whether the placement is prohibited or not
+     */
+    public static boolean isPlacingRestricted(@Nonnull Block block) {
+        // This is intentionally redundant to allow for expandability by adding more booleans and returning their || chain
+        boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
+                && HeadLimiter.getInstance().getConfig().getBoolean("block-towny-wilderness-cargo", false)
+                && TownyAPI.getInstance().isWilderness(block);
+        return isTownyWilderness;
     }
 }
