@@ -8,6 +8,10 @@ auto-update: true
 ## Only touch this setting when you know what you are doing!
 thread-pool-size: 4
 
+## If a claiming plugin is enabled, this setting prevents players from placing cargo outside of claimed areas
+## This makes it impossible to "extend" existing networks from just outside the border in order to steal from claims
+block-wilderness-cargo: false
+
 ## Permissions (false by default)
 ## Permission node: headlimiter.permission.<name>
 ## Example: headlimiter.permission.noob
