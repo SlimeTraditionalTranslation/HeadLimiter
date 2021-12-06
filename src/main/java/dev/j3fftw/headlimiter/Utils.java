@@ -103,7 +103,7 @@ public final class Utils {
 
             BlockStorage.clearBlockInfo(block.getLocation());
             if (isPlacingRestricted) {
-                player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in unprotected areas!");
+                player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in claimed areas!");
             } else {
                 player.sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
             }
@@ -111,15 +111,19 @@ public final class Utils {
     }
 
     /**
-     * Whether the block placement is prohibited or not by protection plugins
+     * Whether the block placement outside claimed areas is prohibited or not by protection plugins
      * @param block The block to be checked
      * @return Whether the placement is prohibited or not
      */
     public static boolean isPlacingRestricted(@Nonnull Block block) {
-        // This is intentionally redundant to allow for expandability by adding more booleans and returning their || chain
-        boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
-                && HeadLimiter.getInstance().getConfig().getBoolean("block-towny-wilderness-cargo", false)
-                && TownyAPI.getInstance().isWilderness(block);
-        return isTownyWilderness;
+        if (HeadLimiter.getInstance().getConfig().getBoolean("block-wilderness-cargo", false)) {
+            boolean isTownyWilderness = Bukkit.getServer().getPluginManager().isPluginEnabled("Towny")
+                    && TownyAPI.getInstance().isWilderness(block);
+
+            // This is intentionally redundant to allow for expandability by adding more booleans and returning their || chain
+            return isTownyWilderness;
+        } else {
+            return false;
+        }
     }
 }
