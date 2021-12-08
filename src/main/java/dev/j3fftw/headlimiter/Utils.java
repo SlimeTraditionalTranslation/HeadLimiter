@@ -103,7 +103,7 @@ public final class Utils {
 
             BlockStorage.clearBlockInfo(block.getLocation());
             if (isPlacingRestricted) {
-                player.sendMessage(ChatColor.RED + "你不能在已佔領的區域內放置物流節點!");
+                player.sendMessage(ChatColor.RED + "你不能在未佔領的區域內放置物流節點!");
             } else {
                 player.sendMessage(ChatColor.RED + "你已達到此區塊的最高物流放置數量");
             }
