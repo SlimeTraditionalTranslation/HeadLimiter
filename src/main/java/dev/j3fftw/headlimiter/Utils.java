@@ -102,7 +102,7 @@ public final class Utils {
 
             BlockStorage.clearBlockInfo(block.getLocation());
             if (isPlacingRestricted) {
-                player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in claimed areas!");
+                player.sendMessage(ChatColor.RED + "You can't place Cargo nodes in unclaimed areas!");
             } else {
                 player.sendMessage(ChatColor.RED + "You hit the limit of Cargo nodes in this chunk");
             }
