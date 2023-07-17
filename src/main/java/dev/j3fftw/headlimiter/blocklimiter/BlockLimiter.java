@@ -60,9 +60,8 @@ public final class BlockLimiter {
         return contentMap.get(chunkPosition);
     }
 
-    @Nullable
-    public ChunkContent setChunkContent(@Nonnull ChunkPosition chunkPosition, @Nonnull ChunkContent content) {
-        return contentMap.put(chunkPosition, content);
+    public void setChunkContent(@Nonnull ChunkPosition chunkPosition, @Nonnull ChunkContent content) {
+        contentMap.put(chunkPosition, content);
     }
 
     @Nonnull
