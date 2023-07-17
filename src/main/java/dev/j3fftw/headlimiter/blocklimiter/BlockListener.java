@@ -13,6 +13,9 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.ChunkPosition;
 
 import dev.j3fftw.headlimiter.HeadLimiter;
 
+import java.util.Map;
+import java.util.Set;
+
 public class BlockListener implements Listener {
 
     public BlockListener(@Nonnull HeadLimiter headLimiter) {
@@ -22,8 +25,13 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onSlimefunItemPlaced(@Nonnull SlimefunBlockPlaceEvent event) {
         SlimefunItem slimefunItem = event.getSlimefunItem();
-        String id = slimefunItem.getId();
-        int definedLimit = HeadLimiter.getSlimefunItemLimit(id);
+        String slimefunItemId = slimefunItem.getId();
+        int definedLimit = HeadLimiter.getInstance().getLimitForItem(slimefunItemId, event.getPlayer());
+
+        if (definedLimit == -1) {
+            // No limit has been set, nothing required for HeadLimiter
+            return;
+        }
 
         ChunkPosition chunkPosition = new ChunkPosition(event.getBlockPlaced().getChunk());
         ChunkContent content = BlockLimiter.getInstance().getChunkContent(chunkPosition);
@@ -31,17 +39,11 @@ public class BlockListener implements Listener {
         if (content == null) {
             // Content is null so no blocks are currently in this chunk, lets set one up - event can continue
             content = new ChunkContent();
-            content.incrementAmount(id);
+            content.incrementAmount(slimefunItemId);
             BlockLimiter.getInstance().setChunkContent(chunkPosition, content);
-        } else if (content.getCurrentAmount(id) < definedLimit) {
+        } else if (content.getCurrentAmount(slimefunItemId) < definedLimit) {
             // This chunk can take more of the specified item type
-            content.incrementAmount(id);
-        }
-
-        // We want to still add to the map but do not cancel if definedLimit is 0.
-        if (definedLimit == 0) {
-            // No limit has been set, nothing required for HeadLimiter
-            return;
+            content.incrementAmount(slimefunItemId);
         }
 
         // Chunk has hit its limit for this type, time to deny the placement
@@ -52,9 +54,9 @@ public class BlockListener implements Listener {
     @EventHandler
     public void onSlimefunItemBroken(@Nonnull SlimefunBlockBreakEvent event) {
         SlimefunItem slimefunItem = event.getSlimefunItem();
-        String id = slimefunItem.getId();
-        int definedLimit = HeadLimiter.getSlimefunItemLimit(id);
-        if (definedLimit == 0) {
+        String slimefunItemId = slimefunItem.getId();
+        int definedLimit = HeadLimiter.getInstance().getLimitForItem(slimefunItemId, event.getPlayer());
+        if (definedLimit == -1) {
             // No limit has been set, nothing required for HeadLimiter
             return;
         }
@@ -68,7 +70,7 @@ public class BlockListener implements Listener {
         }
 
         // This chunk can take more of the specified item type
-        content.decrementAmount(id);
+        content.decrementAmount(slimefunItemId);
 
     }
 

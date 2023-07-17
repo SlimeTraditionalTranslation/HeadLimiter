@@ -4,6 +4,8 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Group {
 
@@ -25,5 +27,21 @@ public class Group {
         for (String key : permissionAmountSection.getKeys(false)) {
             permissionAmount.put(key, permissionAmountSection.getInt(key));
         }
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public int getItemAmount() {
+        return itemAmount;
+    }
+
+    public Set<String> getItems() {
+        return items;
+    }
+
+    public Map<String, Integer> getPermissionAmount() {
+        return permissionAmount;
     }
 }
