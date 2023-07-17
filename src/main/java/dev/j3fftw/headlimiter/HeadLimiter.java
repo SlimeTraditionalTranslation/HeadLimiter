@@ -1,8 +1,9 @@
 package dev.j3fftw.headlimiter;
 
-import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
+import java.io.File;
+
+import javax.annotation.Nonnull;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -12,17 +13,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import com.palmergames.bukkit.towny.regen.block.BlockLocation;
+
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
+
+import dev.j3fftw.headlimiter.blocklimiter.BlockLimiter;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
     private static HeadLimiter instance;
+    private BlockLimiter blockLimiter;
 
     @Override
     public void onEnable() {
         instance = this;
-        if (!new File(getDataFolder(), "config.yml").exists())
+        if (!new File(getDataFolder(), "config.yml").exists()) {
             saveDefaultConfig();
+        }
 
         Utils.loadPermissions();
 
@@ -35,6 +44,8 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
         }
+
+        this.blockLimiter = new BlockLimiter(this);
     }
 
     @Override
@@ -64,13 +75,27 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
                 && isCargo(sfItem)
             ) {
                 final int maxAmount = Utils.getMaxHeads(player);
-                Utils.count(block.getChunk(),
-                    result -> Utils.onCheck(player, block, maxAmount, result.getTotal(), sfItem));
+                Utils.count(
+                    block.getChunk(),
+                    result -> Utils.onCheck(player, block, maxAmount, result.getTotal(), sfItem)
+                );
             }
         }
     }
 
+    public BlockLimiter getBlockLimiter() {
+        return blockLimiter;
+    }
+
     public static HeadLimiter getInstance() {
         return instance;
+    }
+
+    public static int getSlimefunItemLimit(@Nonnull SlimefunItem slimefunItem) {
+        return getSlimefunItemLimit(slimefunItem.getId());
+    }
+
+    public static int getSlimefunItemLimit(@Nonnull String itemId) {
+        return instance.getConfig().getInt("block-limits." + itemId);
     }
 }
