@@ -1,11 +1,14 @@
 package dev.j3fftw.headlimiter;
 
 import java.io.File;
+import java.util.HashSet;
 
 import javax.annotation.Nonnull;
 
+import dev.j3fftw.headlimiter.blocklimiter.Group;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,6 +26,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
     private static HeadLimiter instance;
     private BlockLimiter blockLimiter;
+    private final HashSet<Group> groups = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -44,6 +48,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         }
 
         this.blockLimiter = new BlockLimiter(this);
+        loadConfig();
     }
 
     @Override
@@ -95,5 +100,12 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
     public static int getSlimefunItemLimit(@Nonnull String itemId) {
         return instance.getConfig().getInt("block-limits." + itemId);
+    }
+
+    public void loadConfig() {
+        ConfigurationSection configurationSection = instance.getConfig().getConfigurationSection("block-limits");
+        for (String key : configurationSection.getKeys(false)) {
+            groups.add(new Group(configurationSection.getConfigurationSection(key)));
+        }
     }
 }

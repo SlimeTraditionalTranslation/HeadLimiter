@@ -26,15 +26,30 @@ permission:
   ## alessio: 15
   ## jeff: 10
   noob: 5
-## Put the SlimefunItem ID (found in Items.yml) followed by the maximum number of those blocks you want to allow in
-## a chunk. Please note this will not remove blocks retroactively only limit further placement.
-## Example:
-## CARGO_INPUT_NODE: 25
-## NTW_BRIDGE: 100
-## JEFFS_WEIRD_BOX: 0
+
+## Item groups
+## You can make your own item group see the example. Make sure that the example doesnt match up with any item ID's
+## highly recommend prefixing or suffixing them. For example CARGO_GROUP or GROUP_CARGO.
+##
+##  cargo_group:
+##    items-amount: 25
+##    items:
+##      - CARGO_NODE_INPUT
+##      - CARGO_NODE_OUTPUT
+##      - CARGO_NODE_OUTPUT_ADVANCED
+##      - CARGO_NODE
+##      - CARGO_MANAGER
+##
 block-limits:
-  CARGO_NODE_INPUT: 25
-  CARGO_NODE_OUTPUT: 25
-  CARGO_NODE_OUTPUT_ADVANCED: 25
-  CARGO_NODE: 25
-  CARGO_MANAGER: 25
+  cargo_group:
+    items-amount: 25
+    items:
+      - CARGO_NODE_INPUT
+      - CARGO_NODE_OUTPUT
+      - CARGO_NODE_OUTPUT_ADVANCED
+      - CARGO_NODE
+      - CARGO_MANAGER
+    permission-amount:
+      example_1: 50
+      example_2: 100
+      example_3: 150
