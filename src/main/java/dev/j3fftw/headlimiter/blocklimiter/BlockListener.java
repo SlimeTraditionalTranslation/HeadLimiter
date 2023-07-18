@@ -13,9 +13,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.ChunkPosition;
 
 import dev.j3fftw.headlimiter.HeadLimiter;
 
-import java.util.Map;
-import java.util.Set;
-
 public class BlockListener implements Listener {
 
     public BlockListener(@Nonnull HeadLimiter headLimiter) {
@@ -44,11 +41,11 @@ public class BlockListener implements Listener {
         } else if (content.getCurrentAmount(slimefunItemId) < definedLimit) {
             // This chunk can take more of the specified item type
             content.incrementAmount(slimefunItemId);
+        } else {
+            // Chunk has hit its limit for this type, time to deny the placement
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You cannot place any more of this item within this chunk.");
         }
-
-        // Chunk has hit its limit for this type, time to deny the placement
-        event.setCancelled(true);
-        event.getPlayer().sendMessage(ChatColor.RED + "You cannot place any more of this item within this chunk.");
     }
 
     @EventHandler
