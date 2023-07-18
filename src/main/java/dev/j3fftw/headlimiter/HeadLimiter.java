@@ -103,11 +103,13 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         for (Group group : groupSet) {
             if (group.getItems().contains(slimefunItemId)) {
                 if (!group.getPermissionAmounts().isEmpty()) {
+                    int highestPermissionAmount = 0;
                     for (Map.Entry<String, Integer> entry : group.getPermissionAmounts().entrySet()) {
-                        if (player.hasPermission(entry.getKey())) {
-                            return entry.getValue();
+                        if (player.hasPermission(entry.getKey()) || player.isOp()) {
+                            highestPermissionAmount = Math.max(highestPermissionAmount, entry.getValue());
                         }
                     }
+                    return highestPermissionAmount;
                 }
                 return group.getDefaultAmount();
             }
