@@ -9,39 +9,39 @@ import java.util.Set;
 
 public class Group {
 
-    private final String group;
-    private final int itemAmount;
+    private final String groupName;
+    private final int defaultAmount;
     private final HashSet<String> items;
-    private final HashMap<String, Integer> permissionAmount;
-
+    private final HashMap<String, Integer> permissionAmounts;
 
     public Group(ConfigurationSection configurationSection) {
-        this.group = configurationSection.getName();
-        this.itemAmount = configurationSection.getInt("items-amount");
+        this.groupName = configurationSection.getName();
+        this.defaultAmount = configurationSection.getInt("items-amount", 0);
         this.items = new HashSet<>(configurationSection.getStringList("items"));
-        this.permissionAmount = new HashMap<>();
+        this.permissionAmounts = new HashMap<>();
 
-        ConfigurationSection permissionAmountSection =
-                configurationSection.getConfigurationSection("permission-amount");
+        ConfigurationSection permissionSection = configurationSection.getConfigurationSection("permission-amount");
 
-        for (String key : permissionAmountSection.getKeys(false)) {
-            permissionAmount.put(key, permissionAmountSection.getInt(key));
+        if (permissionSection != null) {
+            for (String key : permissionSection.getKeys(false)) {
+                permissionAmounts.put(key, permissionSection.getInt(key, 0));
+            }
         }
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public int getItemAmount() {
-        return itemAmount;
+    public int getDefaultAmount() {
+        return defaultAmount;
     }
 
     public Set<String> getItems() {
         return items;
     }
 
-    public Map<String, Integer> getPermissionAmount() {
-        return permissionAmount;
+    public Map<String, Integer> getPermissionAmounts() {
+        return permissionAmounts;
     }
 }
