@@ -1,37 +1,14 @@
-## Amount of Cargo machines per chunk (25 by default)
-amount: 25
-
-## Auto updater (true by default)
-auto-update: true
-
-## Size of the thread pool (4 by default)
-## Only touch this setting when you know what you are doing!
-thread-pool-size: 4
-
-## If a claiming plugin is enabled, this setting prevents players from placing cargo outside of claimed areas
-## This makes it impossible to "extend" existing networks from just outside the border in order to steal from claims
-block-wilderness-cargo: false
-
-## Permissions (false by default)
-## Permission node: headlimiter.permission.<name>
-## Example: headlimiter.permission.noob
+## Block Limits
+## You can limit all Slimefun Blocks including all addons.
+## You will have to make a group per item or item set.
 ##
-## When permissions have been set to true, you can use the values here to set the amount of heads checked.
-## You can add as many entries as you want.
-## Order has to be reversed or breaky breaky
-permissions: false
-permission:
-  ## sefi: 25
-  ## walshy: 20
-  ## alessio: 15
-  ## jeff: 10
-  noob: 5
-
-## Item groups
-## You can make your own item group see the example. Make sure that the example doesnt match up with any item ID's
-## highly recommend prefixing or suffixing them. For example CARGO_GROUP or GROUP_CARGO.
-##
-##  cargo_group:
+## Down here you have an example for Cargo.
+## cargo: is the group name
+## items-amount: is the default amount the group is limited to
+## items: will have a list of items you want to block. These are all Slimefun Items IDs (Addons included)
+## permission-amount: this will have a list of permissions. This is completely optional and doesn't have to be there,
+## If you do not want permissions you can just remove it or not add it to the group.
+##  cargo:
 ##    items-amount: 25
 ##    items:
 ##      - CARGO_NODE_INPUT
@@ -39,9 +16,13 @@ permission:
 ##      - CARGO_NODE_OUTPUT_ADVANCED
 ##      - CARGO_NODE
 ##      - CARGO_MANAGER
-##
+##    permission-amount:
+##      example_1: 50
+##      example_2: 100
+##      example_3: 150
+
 block-limits:
-  cargo_group:
+  cargo:
     items-amount: 25
     items:
       - CARGO_NODE_INPUT
