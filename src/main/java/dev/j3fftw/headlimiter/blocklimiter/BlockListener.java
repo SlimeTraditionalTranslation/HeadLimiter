@@ -23,7 +23,7 @@ public class BlockListener implements Listener {
     public void onSlimefunItemPlaced(@Nonnull SlimefunBlockPlaceEvent event) {
         SlimefunItem slimefunItem = event.getSlimefunItem();
         String slimefunItemId = slimefunItem.getId();
-        int definedLimit = HeadLimiter.getInstance().getLimitForItem(slimefunItemId, event.getPlayer());
+        int definedLimit = BlockLimiter.getInstance().getPlayerLimitByItem(event.getPlayer(), slimefunItem);
 
         if (definedLimit == -1) {
             // No limit has been set, nothing required for HeadLimiter
@@ -38,7 +38,7 @@ public class BlockListener implements Listener {
             content = new ChunkContent();
             content.incrementAmount(slimefunItemId);
             BlockLimiter.getInstance().setChunkContent(chunkPosition, content);
-        } else if (content.getCurrentAmount(slimefunItemId) < definedLimit) {
+        } else if (content.getGroupTotal(slimefunItemId) < definedLimit) {
             // This chunk can take more of the specified item type
             content.incrementAmount(slimefunItemId);
         } else {
@@ -52,7 +52,7 @@ public class BlockListener implements Listener {
     public void onSlimefunItemBroken(@Nonnull SlimefunBlockBreakEvent event) {
         SlimefunItem slimefunItem = event.getSlimefunItem();
         String slimefunItemId = slimefunItem.getId();
-        int definedLimit = HeadLimiter.getInstance().getLimitForItem(slimefunItemId, event.getPlayer());
+        int definedLimit = BlockLimiter.getInstance().getPlayerLimitByItem(event.getPlayer(), slimefunItem);
         if (definedLimit == -1) {
             // No limit has been set, nothing required for HeadLimiter
             return;

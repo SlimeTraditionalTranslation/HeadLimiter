@@ -2,6 +2,7 @@ package dev.j3fftw.headlimiter.blocklimiter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -17,6 +18,26 @@ public class ChunkContent {
 
     public int getCurrentAmount(@Nonnull String itemId) {
         return this.contentMap.getOrDefault(itemId, 0);
+    }
+
+    public int getGroupTotal(@Nonnull SlimefunItem slimefunItem) {
+        return getGroupTotal(slimefunItem.getId());
+    }
+
+    public int getGroupTotal(@Nonnull String itemId) {
+        Set<Group> groupSet = BlockLimiter.getInstance().getGroups();
+
+        for (Group group : groupSet) {
+            if (group.contains(itemId)) {
+                int amount = 0;
+                for (String item : group.getItems()) {
+                    amount += this.contentMap.get(item);
+                }
+                return amount;
+            }
+        }
+
+        return -1;
     }
 
     public void incrementAmount(@Nonnull SlimefunItem slimefunItem) {

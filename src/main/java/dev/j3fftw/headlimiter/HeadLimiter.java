@@ -1,9 +1,6 @@
 package dev.j3fftw.headlimiter;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import dev.j3fftw.headlimiter.blocklimiter.Group;
 import org.bukkit.Material;
@@ -26,7 +23,7 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
 
     private static HeadLimiter instance;
     private BlockLimiter blockLimiter;
-    private final HashSet<Group> groups = new HashSet<>();
+
 
     @Override
     public void onEnable() {
@@ -94,35 +91,13 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
         return instance;
     }
 
-    public Set<Group> getGroupSet() {
-        return groups;
-    }
-
-    public int getLimitForItem(String slimefunItemId, Player player) {
-        Set<Group> groupSet = HeadLimiter.getInstance().getGroupSet();
-        for (Group group : groupSet) {
-            if (group.getItems().contains(slimefunItemId)) {
-                if (!group.getPermissionAmounts().isEmpty()) {
-                    int highestPermissionAmount = -1;
-                    for (Map.Entry<String, Integer> entry : group.getPermissionAmounts().entrySet()) {
-                        if (player.hasPermission(entry.getKey()) || player.isOp()) {
-                            highestPermissionAmount = Math.max(highestPermissionAmount, entry.getValue());
-                        } else {
-                            return group.getDefaultAmount();
-                        }
-                    }
-                    return highestPermissionAmount;
-                }
-                return group.getDefaultAmount();
-            }
-        }
-        return -1;
-    }
-
     public void loadConfig() {
         ConfigurationSection configurationSection = instance.getConfig().getConfigurationSection("block-limits");
+        if (configurationSection == null) {
+            throw new IllegalStateException("No configuration for groups is available.");
+        }
         for (String key : configurationSection.getKeys(false)) {
-            groups.add(new Group(configurationSection.getConfigurationSection(key)));
+            BlockLimiter.getInstance().getGroups().add(new Group(configurationSection.getConfigurationSection(key)));
         }
     }
 }
