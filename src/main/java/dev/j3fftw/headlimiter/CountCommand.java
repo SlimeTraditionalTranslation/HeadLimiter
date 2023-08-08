@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.mini2Dx.gettext.GetText;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
@@ -22,12 +23,12 @@ public class CountCommand implements CommandExecutor {
 
                 if (Utils.canBypass(player)) {
                     message.append(result.getTotal() >= Utils.getMaxHeads(player) ? ChatColor.RED : ChatColor.GREEN)
-                        .append("您可以繞過限制")
+                        .append(GetText.tr("You can bypass the limits"))
                         .append('\n');
                 }
 
                 message.append(ChatColor.GOLD)
-                    .append("目前數量: ")
+                    .append(GetText.tr("Current count: "))
                     .append(result.getTotal())
                     .append("/")
                     .append(Utils.getMaxHeads(player))
@@ -48,7 +49,7 @@ public class CountCommand implements CommandExecutor {
             });
         } else {
             sender.sendMessage(ChatColor.GOLD + "/hl count"
-                + ChatColor.GRAY + " - 計算這個區塊內有多少物流"
+                + ChatColor.GRAY + GetText.tr(" - Counts how many heads are in this chunk")
             );
         }
 

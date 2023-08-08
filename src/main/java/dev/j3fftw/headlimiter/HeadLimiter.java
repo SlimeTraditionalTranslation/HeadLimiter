@@ -1,8 +1,12 @@
 package dev.j3fftw.headlimiter;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
 
 import dev.j3fftw.headlimiter.blocklimiter.Group;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,9 +19,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
-import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
+import io.github.bakedlibs.dough.updater.GitHubBuildsUpdaterTR;
 
 import dev.j3fftw.headlimiter.blocklimiter.BlockLimiter;
+import org.mini2Dx.gettext.GetText;
+import org.mini2Dx.gettext.PoFile;
 
 public final class HeadLimiter extends JavaPlugin implements Listener {
 
@@ -32,17 +38,35 @@ public final class HeadLimiter extends JavaPlugin implements Listener {
             saveDefaultConfig();
         }
 
+        GetText.setLocale(Locale.TRADITIONAL_CHINESE);
+        InputStream inputStream = getClass().getResourceAsStream("/translations/zh_tw.po");
+        if (inputStream == null) {
+            getLogger().severe("錯誤！無法找到翻譯檔案，請回報給翻譯者。");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        } else {
+            getLogger().info("載入繁體翻譯檔案...");
+            try {
+                PoFile poFile = new PoFile(Locale.TRADITIONAL_CHINESE, inputStream);
+                GetText.add(poFile);
+            } catch (ParseCancellationException | IOException e) {
+                getLogger().severe("錯誤！讀取翻譯時發生錯誤，請回報給翻譯者：" + e.getMessage());
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
+        }
+
         Utils.loadPermissions();
 
         getServer().getPluginManager().registerEvents(this, this);
 
         getCommand("headlimiter").setExecutor(new CountCommand());
 
-        //new MetricsService(this).start();
+        // new MetricsService(this).start();
 
-        /*if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("DEV - ")) {
-            new GitHubBuildsUpdater(this, getFile(), "J3fftw1/HeadLimiter/master").start();
-        }*/
+        if (getConfig().getBoolean("auto-update", true) && getDescription().getVersion().startsWith("Build_STCT - ")) {
+            new GitHubBuildsUpdaterTR(this, getFile(), "SlimeTraditionalTranslation/HeadLimiter/master").start();
+        }
 
         this.blockLimiter = new BlockLimiter(this);
         loadConfig();

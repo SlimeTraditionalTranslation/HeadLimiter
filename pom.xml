@@ -28,6 +28,7 @@
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
                     <include>*</include>
+                    <include>translations/*.po</include>
                 </includes>
             </resource>
             <resource>
@@ -130,6 +131,18 @@
             <artifactId>Towny</artifactId>
             <version>0.97.3.0</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mini2Dx</groupId>
+            <artifactId>gettext-lib</artifactId>
+            <version>1.11.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.SlimeTraditionalTranslation</groupId>
+            <artifactId>dough</artifactId>
+            <version>v1.0.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -13,6 +13,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.mini2Dx.gettext.GetText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -102,9 +103,9 @@ public final class Utils {
 
             BlockStorage.clearBlockInfo(block.getLocation());
             if (isPlacingRestricted) {
-                player.sendMessage(ChatColor.RED + "你不能在未佔領的區域內放置物流節點!");
+                player.sendMessage(ChatColor.RED + GetText.tr("You can't place Cargo nodes in unclaimed areas!"));
             } else {
-                player.sendMessage(ChatColor.RED + "你已達到此區塊的最高物流放置數量");
+                player.sendMessage(ChatColor.RED + GetText.tr("You hit the limit of Cargo nodes in this chunk"));
             }
         }
     }

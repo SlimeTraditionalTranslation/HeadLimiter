@@ -12,6 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.ChunkPosition;
 
 import dev.j3fftw.headlimiter.HeadLimiter;
+import org.mini2Dx.gettext.GetText;
 
 public class BlockListener implements Listener {
 
@@ -44,7 +45,7 @@ public class BlockListener implements Listener {
         } else {
             // Chunk has hit its limit for this type, time to deny the placement
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "You cannot place any more of this item within this chunk.");
+            event.getPlayer().sendMessage(ChatColor.RED + GetText.tr("You cannot place any more of this item within this chunk."));
         }
     }
 
